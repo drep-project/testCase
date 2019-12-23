@@ -7,7 +7,10 @@ from time import sleep
 import requests
 import random
 import time
-from threading import Lock, Thread
+import logging
+from apis.log import Logger
+
+log = Logger(filename='../logs/api_time_of_120_account_100.log', level='debug')
 
 
 class myThread(threading.Thread):
@@ -20,6 +23,7 @@ class myThread(threading.Thread):
 	
 	def run(self):
 		print("开始线程：" + str(self.threadID))
+		logging.info("开始线程：" + str(self.threadID))
 		# 一个账户执行 120次
 		# lock = Lock()
 		# lock.acquire()
@@ -30,6 +34,7 @@ class myThread(threading.Thread):
 		sleep(600)
 		# lock.release()
 		print("退出线程：" + str(self.threadID))
+		logging.info("退出线程：" + str(self.threadID))
 
 
 class Api():
@@ -50,19 +55,21 @@ class Api():
 		try:
 			response = requests.request("POST", url, data=payload, headers=headers)
 			print("creat_account_response:{}", response.text)
+			logging.info("creat_account_response:{}".format(response.text))
 			jsonDic = json.loads(response.text)
 			# print("创建账户:" + jsonDic['result'])
 			# print("num: {}".format(num))
 			return jsonDic['result']
-		except:
+		except Exception as e:
 			print("HTTP error")
+			logging.error("HTTP error,{}".format(e))
 			return "error Account"
 	
 	# 发交易  0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c
 	def privkey_api(self, count, rootAccount, recivice):
 		print("发送者: {} --> 接收者: {}".format(rootAccount, recivice))
+		logging.info("发送者: {} --> 接收者: {}".format(rootAccount, recivice))
 		url = "http://127.0.0.1:15645"
-		
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_transfer\",\n\t\"params\":[\"0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c\",\"0xde4541def39ca2393d159f6f407d225dfb653c22\",\"0x16800000000\",\"0x110\",\"0x30000\",\"\"],\n\t\"id\":1\n\t\n}"
 		jsonDic = json.loads(payload)
 		# print(jsonDic)
@@ -73,15 +80,21 @@ class Api():
 		jsonDic["params"][2] = price[random.randint(0, len(price) - 1)]
 		payload = json.dumps(jsonDic)
 		print("recivice_account: {}  -- data: {}".format(recivice, payload))
-		
+		logging.info("recivice_account: {}  -- data: {}".format(recivice, payload))
+
 		headers = {
 			'Content-Type': "application/json",
 			'cache-control': "no-cache",
 			'Postman-Token': "6616a7d2-3705-4d37-b779-ef595abde465"
 		}
 		# print('******start*****************')
-		response = requests.request("POST", url, data=payload, headers=headers)
-		print('privkey_response: ' + response.text)
+		try:
+			response = requests.request("POST", url, data=payload, headers=headers)
+			print('privkey_response: ' + response.text)
+			logging.info('privkey_response: ' + response.text)
+		except Exception as e:
+			logging.error("发送交易失败,{}".format(e))
+			return -1
 		return response.text
 	
 	def check_block(self):
@@ -125,12 +138,14 @@ class Api():
 					sleep(60)
 				else:
 					print('暂停交易')
+					logging.error("暂停交易,区块高度相同,{}".format(run))
 					sleep(30)
 			# sleep(3)
 			except Exception as e:
 				print("交易失败!", e)
+				logging.error("交易失败,{}".format(e))
 			count = count + 1
-			print('执行一次交易休眠30s')
+			logging.info('执行一次交易休眠30s')
 			sleep(30)
 
 
@@ -148,6 +163,8 @@ def account_100_run_pay_120(peoples=100):
 			account = api.creat_account()
 			# 为一个用户创建一个线程 独立运行 120 次交易
 			print("创建用户： {}".format(i) + account)
+			logging.info("创建用户： {}".format(i) + account)
+
 			# times_of_120(account)
 			# account_100.append(account)
 			threadX = myThread(i, rootAccount, account)
@@ -155,8 +172,11 @@ def account_100_run_pay_120(peoples=100):
 		# sleep(2)
 		except Exception as e:
 			print("账户创建失败!")
+			logging.error("账户创建失败!{}".format(e))
 			sleep(3)
 			print("账户创建失败!")
+			logging.error("账户创建失败!{}".format(e))
+
 
 
 # 每n秒执行一次
@@ -172,12 +192,14 @@ def timer(n):
 		if height == heightNew:
 			run = 0
 			print("高度相同,停止交易")
+			logging.error("高度相同,停止交易,{}".format(heightNew))
+
 		else:
 			height = heightNew
 			run = 1
 		time.sleep(n)
 		# print(run, height)
-		print("本地时间为:{},区块高度: {},run:{}".format(localtime, heightNew, run))
+		logging.info("本地时间为:{},区块高度: {},run:{}".format(localtime, heightNew, run))
 
 
 run = 1

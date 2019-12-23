@@ -1,15 +1,22 @@
-from apis.API import request_Api  # 必须导入  用于向后端发送请求
-from apis.api_get_addresslist import get_address_list as address
+#!/usr/bin/env python
+# encoding: utf-8
+'''
+@author: caroline
+@license: (C) Copyright 2019-2022, Node Supply Chain Manager Corporation Limited.
+@contact: caroline.fang.cc@gmail.com
+@software: pycharm
+@file: test.py
+@time: 2019/12/23 3:21 下午
+@desc:
+'''
+
 from apis.api_chain_transaction import *
-from apis.API import save_excel
-import logging
-import apis.log
 
 
 
 def chain_getBalance(api_name, params):
 	'''
-	
+
 	:return: 查询对应账户的余额
 	'''
 	logging.info("业务  请求 chain_getBalance")
@@ -36,7 +43,7 @@ def getBalance_of_all_address_list(api_name, address):
 		try:
 			result = request_Api(api_name, params)
 		except Exception as e:
-			logging.error("查询地址中所有账号余额失败,{}".format(e))
+			print("查询地址中所有账号余额失败,{}".format(e))
 			continue
 		logging.info("业务请求: {},result:{}".format(api_name, result))
 		result = result["result"]
@@ -56,18 +63,14 @@ def getBalance_of_all_address_list(api_name, address):
 # transaction_one("0x2777fcb6365b64876be85fbfe5e0242ec8852157", "0x712f455a6102987450c2daade60d3f1c8b3b551d")
 
 if __name__ == '__main__':
-	log = apis.log.Logger(filename='../logs/getBalance.log', level='debug')
-	address_list = address(api_name="account_listAddress", param=[])
-	logging.info("传入地址为:{}".format(address_list))
-	account, result = getBalance_of_all_address_list(api_name="chain_getBalance", address=address_list)
-	name = u'余额不为零的账号'
-	money = u'金额'
-	save_excel(account, result, name, money, "余额不为0的账号及金额")  # 生成Excel
-	# rootaccount=0xad3dc2d8aedef155eaba42ab72c1fe480699336c
-	result = transaction_one(send_account="0x6C92Dfe1059e66517dFC2126A90C204c95F511ef", receive_account=address_list,
-	                         price="186a0")  # 执行多次交易
-	logging.info("执行多次交易.{}".format(result))
-	account, result = getBalance_of_all_address_list(api_name="chain_getBalance", address=address_list)  # 再次查看余额
-	name = u'余额不为零的账号'
-	money = u'金额'
-	save_excel(account, result, name, money, "执行多次交易后的余额")
+	rootbalance1 = chain_getBalance(api_name="chain_getBalance",params=["0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c"])
+	balance1 = chain_getBalance(api_name="chain_getBalance",params=["0x016fA969d48C0BeB39e099d88356500Be5b854f3"])
+	print("rootbalance1,{},balance1{}".format(rootbalance1,balance1))
+	send_account = "0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c"
+	receive_account = "0x016fA969d48C0BeB39e099d88356500Be5b854f3"
+	price = "0x2710"
+	result = transaction_one(send_account, receive_account, price)
+	print("执行一笔交易", result)
+	rootbalance2 = chain_getBalance(api_name="chain_getBalance",params=["0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c"])
+	balance2 = chain_getBalance(api_name="chain_getBalance",params=["0x016fA969d48C0BeB39e099d88356500Be5b854f3"])
+	print("rootbalance2,{},balance2{}".format(rootbalance2,balance2))

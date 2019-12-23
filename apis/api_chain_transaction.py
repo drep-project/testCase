@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import random
+import logging
+import apis.log
 import numpy as np
 from apis import api_create_account as ca
 from apis.API import request_Api
 
 
 # 执行多次 交易 函数
-def transaction_one(send_account, receive_account,price):
+def transaction_one(send_account, receive_account, price):
 	'''
 	
 	:param rootAccount: 发送账户
@@ -16,10 +18,14 @@ def transaction_one(send_account, receive_account,price):
 	'''
 	
 	api_name = "account_transfer"
-	price = price[random.randint(0, len(price) - 1)]
-	api_params = [send_account, receive_account, price, "0x110", "0x30000", ""]
-	result = request_Api(api_name, api_params)
-	result = result['result']
+	try:
+		api_params = [send_account, receive_account, price, "0x110", "0x30000", ""]
+		result = request_Api(api_name, api_params)
+		result = result['result']
+	except:
+		print("发送一笔交易失败{}".format(result))
+		logging.info("发送一笔交易失败{}".format(result))
+		return -1
 	return result
 
 
@@ -31,28 +37,33 @@ def random_transaction(api_name, send_account, receive_account):
 	:param receive_account:
 	:return:
 	'''
-	print(receive_account)
+	logging.info(receive_account)
 	price = ["0x168000000000000", "0x18800000000", "0x16600000000", '0x1580000000', "0x368000000000", "0x66800000000"]
 	for i in range(len(receive_account)):
-		print(receive_account[i])
+		logging.info(receive_account[i])
 		receive_account = np.array(receive_account)
-		print(receive_account[i])
+		logging.info(receive_account[i])
 		price = price[random.randint(0, len(price) - 1)]
-		print(price)
-		print("ra:{},reac{},pri{}".format(send_account, receive_account[i], price))
-		api_params = [send_account, receive_account[i], price, "0x110", "0x30000", ""]
-		print("api_params:{} ".format(api_params))
-		result = request_Api(api_name, api_params)
+		logging.info(price)
+		logging.info("ra:{},reac{},pri{}".format(send_account, receive_account[i], price))
+		try:
+			api_params = [send_account, receive_account[i], price, "0x110", "0x30000", ""]
+			logging.info("api_params:{} ".format(api_params))
+			result = request_Api(api_name, api_params)
 		# print("业务需求: 发送交易 transaction of 120,result:{}".format(result))
+		except Exception as e:
+			logging.info("随机发送多笔交易失败{}".format(e))
+			continue
 		return result
 
 
 if __name__ == '__main__':
+	log = apis.log.Logger(filename='../logs/transfer.log', level='info')
 	api_name = "account_transfer"
-	send_account = "0x2777fcb6365b64876be85fbfe5e0242ec8852157"
+	send_account = ""
 	price = ["0x168000000000000", "0x18800000000", "0x16600000000", '0x1580000000', "0x368000000000", "0x66800000000"]
-	#receive_account = ca.create_account(api_name="account_createAccount", params=[])           #单个账号
-	receive_account = ca.create_account_100(peoples=3)        #多个账号
-
+	# receive_account = ca.create_account(api_name="account_createAccount", params=[])           #单个账号
+	receive_account = ca.create_account_100(peoples=3)  # 多个账号
+	
 	# transaction_one(send_account, receive_account)            #执行一笔交易
 	random_transaction(api_name, send_account, receive_account)

@@ -3,6 +3,8 @@
 import json
 import requests
 import xlwt
+import logging
+from apis.log import Logger
 
 
 def request_Api(api_name, params):
@@ -12,7 +14,7 @@ def request_Api(api_name, params):
 	:param params:     参数
 	:return:
 	"""
-	print("api名字: {}  -- 参数: {}".format(api_name, params))
+	("api名字: {}  -- 参数: {}".format(api_name, params))
 	url = "http://127.0.0.1:15645"
 	
 	payload = {
@@ -21,7 +23,7 @@ def request_Api(api_name, params):
 		'params': params,  # ['0xad3dc2d8aedef155eaba42ab72c1fe480699336c'],
 		'id': 3
 	}
-	print("参数:{},payload:{}".format(params, payload))
+	logging.info("参数:{},payload:{}".format(params, payload))
 	payload = json.dumps(payload)
 	
 	headers = {
@@ -31,11 +33,11 @@ def request_Api(api_name, params):
 	}
 	try:
 		response = requests.request("POST", url, data=payload, headers=headers)
-		print(response.text)
+		logging.info(response.text)
 		jsonDic = json.loads(response.text)
 		return jsonDic
 	except Exception as e:
-		print(e)
+		logging.error("接口报错".format(e))
 	return -1  # -1 默认接口调用失败
 
 
@@ -66,5 +68,6 @@ def save_excel(account, result, sheet1_name, sheet2_name, file_name):
 	
 	
 if __name__ == '__main__':
+	log = Logger(filename='../logs/API.log', level='info')
 	a = request_Api(api_name="account_createAccount", params=[])
 
