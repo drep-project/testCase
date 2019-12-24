@@ -42,7 +42,7 @@ def unlock(api_name, unlock_account):
 
 if __name__ == '__main__':
 	api_name = "account_lockAccount"
-	params = ["0x01bBF4c3d0EcDbbc572E0078dB768F4AEe883e0C"]
+	params = ["0x016fA969d48C0BeB39e099d88356500Be5b854f3"]
 	# result = lock(api_name, params)
 	result = unlock(api_name, params)
 	print(result)
