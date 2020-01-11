@@ -28,7 +28,7 @@ from drep.testcase import c_a as ca
 # 		print("退出线程：" + str(self.threadID))
 
 
-# 执行 多次 交易 函数
+# 执行 多次 transfer 函数
 
 
 def Atransaction():

@@ -34,7 +34,7 @@ class Api():
 	
 	# 创建账户
 	def creat_account(self):
-		url = "http://127.0.0.1:15645"
+		url = "http://39.98.39.224:35645"
 		
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_createAccount\",\n\t\"params\":[], \n\t\"id\": 3\n\t\n}"
 		headers = {
@@ -57,7 +57,7 @@ class Api():
 	def privkey_api(self, count, rootAccount, recivice):
 		
 		print("发送者: {} --> 接收者: {}".format(rootAccount, recivice))
-		url = "http://127.0.0.1:15645"
+		url = "http://39.98.39.224:35645"
 		
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_transfer\",\n\t\"params\":[\"0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c\",\"0xde4541def39ca2393d159f6f407d225dfb653c22\",\"0x16800000000\",\"0x110\",\"0x30000\",\"\"],\n\t\"id\":1\n\t\n}"
 		jsonDic = json.loads(payload)
@@ -80,7 +80,7 @@ class Api():
 		return response.text
 	
 	def check_block(self):
-		url = "http://127.0.0.1:15645"
+		url = "http://39.98.39.224:35645"
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"chain_getMaxHeight\",\n\t\"params\":[],\n\t\"id\":1\n\t\n}"
 		headers = {
 			'Content-Type': "application/json",
@@ -96,7 +96,7 @@ class Api():
 	
 	
 	
-	# 执行 120次 交易 函数
+	# 执行 120次 transfer 函数
 	def times_of_120(self, account):
 		count = 1
 		while True:
@@ -176,8 +176,9 @@ def timer(n):
 		print("本地时间为:{},区块高度: {},run:{}".format(localtime, heightNew, run))
 
 
-run = 1
-height = 0
-all_count = 0
-rootAccount = ["0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c"]
-timer(60)
+if __name__ == '__main__':
+	run = 1
+	height = 0
+	all_count = 0
+	rootAccount = ["0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c"]
+	timer(60)

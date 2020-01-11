@@ -113,7 +113,7 @@ class Api():
 	
 	
 	
-	# 执行 120次 交易 函数
+	# 执行 120次 transfer 函数
 	def times_of_120(self, account):
 		count = 1
 		while True:

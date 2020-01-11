@@ -75,20 +75,3 @@ while True:
     privkey_api(count)
     count = count + 1
     sleep(1 / 12)
-
-
-
-import requests
-
-url = "http://127.0.0.1:15645"
-
-payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"chain_getBalance\",\n\t\"params\":[\"0xad3dc2d8aedef155eaba42ab72c1fe480699336c\"],\n\t\"id\": 3\n\t\n}\n"
-headers = {
-    'Content-Type': "application/json",
-    'cache-control': "no-cache",
-    'Postman-Token': "d191c48c-cef5-4a58-959f-9f487a41068e"
-    }
-
-response = requests.request("POST", url, data=payload, headers=headers)
-
-print(response.text)

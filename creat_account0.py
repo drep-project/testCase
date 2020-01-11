@@ -16,7 +16,7 @@ class myThread(threading.Thread):
 
 # 创建账户
 def creat_account():
-	url = "http://127.0.0.1:15645"
+	url = "http://39.98.39.224:35645"
 	
 	payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_createAccount\",\n\t\"params\":[], \n\t\"id\": 3\n\t\n}"
 	headers = {
@@ -26,13 +26,13 @@ def creat_account():
 	}
 	try:
 		response = requests.request("POST", url, data=payload, headers=headers)
-		print("creat_account_response:{}", response.text)
+		print("creat_account_response:{}".format(response.text))
 		jsonDic = json.loads(response.text)
 		return jsonDic['result']
 	except:
 		print("HTTP error")
 		response = requests.request("POST", url, data=payload, headers=headers)
-		print("creat_account_response:{}", response.text)
+		print("creat_account_response:{}".format(response.text))
 		return "error Account"
 
 
