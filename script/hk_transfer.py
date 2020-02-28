@@ -41,9 +41,6 @@ class myThread(threading.Thread):
 
 
 class Api():
-	'''
-
-	'''
 	
 	def __init__(self, rootAccount):
 		i = random.randint(0, len(rootAccount) - 1)
@@ -52,6 +49,7 @@ class Api():
 	# 创建账户
 	def creat_account(self):
 		url = "http://47.75.98.179:35645"
+		
 		
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_createAccount\",\n\t\"params\":[], \n\t\"id\": 3\n\t\n}"
 		headers = {
@@ -67,8 +65,8 @@ class Api():
 			print("创建账户:" + jsonDic['result'])
 			return jsonDic['result']
 		except Exception as e:
-			logging.error("HTTP error".format(e))
-			print("HTTP error".format(e))
+			logging.error("HTTP error {}".format(e))
+			print("HTTP error {}".format(e))
 			return "error Account", e
 	
 	# 发交易  0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c
@@ -76,15 +74,16 @@ class Api():
 		logging.info("发送者: {} --> 接收者: {}".format(rootAccount, recivice))
 		print("发送者: {} --> 接收者: {}".format(rootAccount, recivice))
 		
-		url = "http://47.75.98.179:15645"
+		url = "http://47.75.98.179:35645"
 		
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_transfer\",\n\t\"params\":[\"0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c\",\"0xde4541def39ca2393d159f6f407d225dfb653c22\",\"0x16800000000\",\"0x110\",\"0x30000\",\"\"],\n\t\"id\":1\n\t\n}"
 		jsonDic = json.loads(payload)
 		# print(jsonDic)
 		jsonDic["params"][0] = rootAccount
 		jsonDic["params"][1] = recivice
-		price = ["0x168000000000000", "0x18800000000", "0x16600000000", '0x1580000000', "0x368000000000",
-		         "0x66800000000"]
+		# price = ["0x168000000000000", "0x18800000000", "0x16600000000", '0x1580000000', "0x368000000000",
+		#          "0x66800000000"]
+		price = ["0x64"]
 		jsonDic["params"][2] = price[random.randint(0, len(price) - 1)]
 		payload = json.dumps(jsonDic)
 		logging.info("recivice_account: {}  -- data: {}".format(recivice, payload))
@@ -102,7 +101,7 @@ class Api():
 		return response.text
 	
 	def check_block(self):
-		url = "http://47.75.98.179:15645"
+		url = "http://47.75.98.179:35645"
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"chain_getMaxHeight\",\n\t\"params\":[],\n\t\"id\":1\n\t\n}"
 		headers = {
 			'Content-Type': "application/json",
@@ -155,8 +154,8 @@ class Api():
 			# 		logging.info('暂停交易')
 			# 	sleep(3)       #30
 			# except Exception as e:
-			# 	print("交易失败!区块高度相等".format(e))
-			# 	logging.error("交易失败!".format(e))
+			# 	print("交易失败!区块高度相等 {}".format(e))
+			# 	logging.error("交易失败! {}".format(e))
 			# count = count + 1
 			# logging.info('执行一次交易休眠30s')
 			# print('执行一次交易休眠30s')
@@ -194,8 +193,8 @@ def account_100_run_pay_120(peoples=100):
 			threadX.start()
 		# sleep(2)
 		except Exception as e:
-			print("账户创建失败!".format(e))
-			logging.error("账户创建失败!".format(e))
+			print("账户创建失败! {}".format(e))
+			logging.error("账户创建失败! {}".format(e))
 			sleep(3)
 
 
@@ -206,28 +205,24 @@ def timer(n):
 	
 	while True:
 		account_100_run_pay_120(100000)
-		#heightNew = api.check_block()
-		# localtime = time.asctime(time.localtime(time.time()))  # 得到本地时间
-		# # print("本地时间为:{},区块高度: {}".format(localtime, heightNew))
-		# if height == heightNew:
-		# 	run = 0
-		# 	logging.error("高度相同,停止交易".format(heightNew))
-		# else:
-		# 	height = heightNew
-		# 	run = 1
-		# time.sleep(n)
-		# # print(run, height)
-		# print("本地时间为:{},区块高度: {},run:{}".format(localtime, heightNew, run))
+		heightNew = api.check_block()
+		localtime = time.asctime(time.localtime(time.time()))  # 得到本地时间
+		# print("本地时间为:{},区块高度: {}".format(localtime, heightNew))
+		if height == heightNew:
+			run = 0
+			logging.error("高度相同,停止交易 {}".format(heightNew))
+		else:
+			height = heightNew
+			run = 1
+		time.sleep(n)
+		# print(run, height)
+		print("本地时间为:{},区块高度: {},run:{}".format(localtime, heightNew, run))
 		# logging.info("本地时间为:{},区块高度: {},run:{}".format(localtime, heightNew, run))
 
 
-if __name__ == '__main__':
-	run = 1
-	height = 0
-	all_count = 0
-	rootAccount = ["0x00162F34533cB204868d619930188d38E49bC625", "0x00336DBd3d7599D23334d4EE12A5668099d1706a",
-	               "0x0035cABcBAb1C81aA7221972dCE56878b631038B", "0x005968592A45cacb08C9421F16db31411Ca38953",
-	               "0x0063bD1df206a7e9A4823FaEd38C4aB14a464C2F", "0x006eAbc443f48050C0725CFB13Fc901e67dA14C1"]
-	recevied = ["0x00833e9D5fbf2D474F1092b68D6DE0b5f7c7468C"]
-	timer(60)
+run = 1
+height = 0
+all_count = 0
+rootAccount = ["0xad3dc2d8aedef155eaba42ab72c1fe480699336c"]
+timer(6)
 

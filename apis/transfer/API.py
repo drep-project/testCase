@@ -4,7 +4,11 @@ import json
 import requests
 import xlwt
 import logging
-from apis.log import Logger
+
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
+
+from log import Logger
 
 
 def request_Api(api_name, params):
@@ -27,18 +31,28 @@ def request_Api(api_name, params):
 	payload = json.dumps(payload)
 	
 	headers = {
+	
 		'Content-Type': "application/json",
 		'cache-control': "no-cache",
-		'Postman-Token': "27a29181-18f4-4549-80c2-d23196a7df15"
+		'Postman-Token': "27a29181-18f4-4549-80c2-d23196a7df15",
+		'Connection': "close"
 	}
 	try:
-		response = requests.request("POST", url, data=payload, headers=headers)
+		requests.adapters.DEFAULT_RETRIES = 5
+		session = requests.Session()
+		session.keep_alive = False
+		retry = Retry(connect=5, backoff_factor=0.5)
+		adapter = HTTPAdapter(max_retries=retry)
+		session.mount('http://', adapter)
+		session.mount('https://', adapter)
+		
+		response = session.request("POST", url, data=payload, headers=headers)
 		logging.info(response.text)
 		jsonDic = json.loads(response.text)
 		return jsonDic
 	except Exception as e:
-		logging.error("接口报错".format(e))
-		return -1  # -1 默认接口调用失败
+		logging.error("接口报错{}".format(e))
+		return e  # -1 默认接口调用失败
 
 
 def save_excel(account, result, sheet1_name, sheet2_name, file_name):
@@ -68,6 +82,6 @@ def save_excel(account, result, sheet1_name, sheet2_name, file_name):
 	
 	
 if __name__ == '__main__':
-	log = Logger(filename='../logs/API.log', level='info')
+	#log = Logger(filename='../logs/API.log', level='info')
 	a = request_Api(api_name="account_createAccount", params=[])
 

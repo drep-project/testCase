@@ -1,8 +1,8 @@
 import logging
-import apis.log
-from apis import API as api
+import log
+from transaction_account import API as api
 
-apis.log.Logger(filename="get_addresslist.log")
+log.Logger(filename="get_addresslist.log")
 
 
 def get_address_list(api_name, param):

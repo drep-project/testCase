@@ -42,7 +42,8 @@ class Api():
 	
 	# 创建账户
 	def creat_account(self):
-		url = "http://127.0.0.1:15645"
+		# url = "http://127.0.0.1:15645"
+		url = "http://47.75.98.179:35645"
 		
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_createAccount\",\n\t\"params\":[], \n\t\"id\": 3\n\t\n}"
 		headers = {

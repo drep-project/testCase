@@ -52,7 +52,7 @@ if __name__ == '__main__':
 	# api_name = "account_createAccount"
 	# params = []
 	# create_account(api_name, params)
-	log = Logger(filename='../logs/creat_account.log', level='debug')
+	#log = Logger(filename='../logs/creat_account.log', level='debug')
 	api_name = "account_createAccount"
 	params = []
-	create_account_100(peoples=1000000)
+	create_account_100(peoples=1000)

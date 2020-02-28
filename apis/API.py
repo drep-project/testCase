@@ -37,8 +37,10 @@ def request_Api(api_name, params):
 		jsonDic = json.loads(response.text)
 		return jsonDic
 	except Exception as e:
-		logging.error("接口报错".format(e))
-		return -1  # -1 默认接口调用失败
+		logging.error("接口报错{}".format(e))
+		print("接口报错{}".format(e))
+
+		return e  # -1 默认接口调用失败
 
 
 def save_excel(account, result, sheet1_name, sheet2_name, file_name):
@@ -63,6 +65,7 @@ def save_excel(account, result, sheet1_name, sheet2_name, file_name):
 		j = j + 1
 	for i in result:
 		sheet1.write(s, 1, i)  # 循环写入 竖着写
+		print("i的值{}".format(i))
 		s = s + 1
 	f.save('{}.xls'.format(file_name))  # 保存文件
 	

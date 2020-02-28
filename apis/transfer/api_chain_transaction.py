@@ -2,10 +2,10 @@
 # -*- coding: UTF-8 -*-
 import random
 import logging
-import apis.log
+import log
 import numpy as np
-from apis.creat_account import api_create_account as ca
-from apis.API import request_Api
+from transaction_account import api_create_account as ca
+from transaction_account.API import request_Api
 
 
 # 执行多次 transfer 函数
@@ -21,11 +21,12 @@ def transaction_one(send_account, receive_account, price):
 	try:
 		api_params = [send_account, receive_account, price, "0x110", "0x30000", ""]
 		result = request_Api(api_name, api_params)
+		print(result)
 		result = result['result']
 	except Exception as e:
 		print("发送一笔交易失败{}".format(e))
 		logging.info("发送一笔交易失败{}".format(e))
-		return -1
+		return e
 	return result
 
 
@@ -58,9 +59,9 @@ def random_transaction(api_name, send_account, receive_account):
 
 
 if __name__ == '__main__':
-	log = apis.log.Logger(filename='../logs/transfer.log', level='info')
+	#log = apis.log.Logger(filename='../logs/transfer.log', level='info')
 	api_name = "account_transfer"
-	send_account = "0x00162F34533cB204868d619930188d38E49bC625"
+	send_account = "0x21776E55F248f699E9Ae3a86c46Af9FCB372Fa5c"
 	price = ["0x168000000000000", "0x18800000000", "0x16600000000", '0x1580000000', "0x368000000000", "0x66800000000"]
 	receive_account = ca.create_account(api_name="account_createAccount", params=[])           #单个账号
 	# receive_account = ca.create_account_100(peoples=3)  # 多个账号

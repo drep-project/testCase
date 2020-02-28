@@ -1,7 +1,7 @@
 import logging
 
-import apis
-from apis.API import save_excel
+
+from apis.transaction_account.API import save_excel
 from apis.Utils import *
 from apis.creat_account.api_get_addresslist import get_address_list
 from apis.transfer.API import request_Api
@@ -40,17 +40,26 @@ def getBalance_of_all_address_list(api_name, address):
 			logging.error("查询地址中所有账号余额失败,{}".format(e))
 			continue
 		logging.info("业务请求: {},result:{}".format(api_name, result))
-		result = result["result"]
-		# print("结果{}".format(result))
+		print("3333", result)
+		
+		result = int(result["result"])
+		#print("结果{}".format(result))
 		# result = pow(result, -18)
+		#num = 0
+		
+		#print(result)
+		result = int(result / pow(10, 18))
+		#print("除以18后{}".format(result))
+		
 		if result > 0:
-			result = int(result / pow(10, 18))
-			print("除以18后{}".format(result))
+			print("比较后{}".format(result))
 			result_list.append(result)
+			print("比较后{}".format(result_list))
 			getBalance_account_list.append(params)
 		else:
 			logging.info("结果为:{}".format(result))
 	logging.info("有余额的账户为:{},共有{}余额".format(getBalance_account_list, result_list))
+	print(getBalance_account_list, getBalance_account_list)
 	return getBalance_account_list, result_list
 
 
@@ -65,8 +74,8 @@ def transfer_balance(api_name, send_account, receive_account, price):
 	'''
 	send_account_balance_before = chain_getBalance(api_name, [send_account])["result"]  # 查询发送交易之前发送账号的余额,并得到result中的值
 	receive_account_balance_before = chain_getBalance(api_name, [receive_account])["result"]  # 查询发送交易之前接收交易的账号的余额
-	print("send_account发送前余额,{},received_account接收账号之前余额{}".format(send_account_balance_before,
-	                                                               receive_account_balance_before))
+	print("send_account发送前账号: {},send_account发送前余额: {},received_account接收账号之前账号：{},received_account接收账号之前余额: {}"
+	      .format(send_account, send_account_balance_before,receive_account, receive_account_balance_before))
 	result = transaction_one(send_account, receive_account, price)  # 发送一笔交易
 	print("执行一笔交易", result)
 	result = {
@@ -142,17 +151,26 @@ if __name__ == '__main__':
 	name = u'余额不为零的账号'
 	money = u'金额'
 	save_excel(account, result, name, money, "余额不为0的账号及金额")  # 生成Excel
-# api_name = "chain_getBalance"
-# account = ["0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c", "0x016fA969d48C0BeB39e099d88356500Be5b854f3"]
-# price = "0xf4240"
-# transfer_balance(api_name, account[0], account[1], price)
-# time.sleep(180)
-# check_transfer_balance(api_name)
-# rootaccount = 0xad3dc2d8aedef155eaba42ab72c1fe480699336c
-# result = transaction_one(send_account="0x6C92Dfe1059e66517dFC2126A90C204c95F511ef", receive_account=address_list,
-#                          price="186a0")  # 执行多次交易
-# logging.info("执行多次交易.{}".format(result))
-# account, result = getBalance_of_all_address_list(api_name="chain_getBalance", address=address_list)  # 再次查看余额
-# name = u'余额不为零的账号'
-# money = u'金额'
-# save_excel(account, result, name, money, "执行多次交易后的余额")
+	
+	
+	
+	
+	
+	'''
+	
+api_name = "chain_getBalance"
+account = ["0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c", "0x016fA969d48C0BeB39e099d88356500Be5b854f3"]
+price = "0xf4240"
+transfer_balance(api_name, account[0], account[1], price)
+time.sleep(180)
+check_transfer_balance(api_name)
+rootaccount = 0xad3dc2d8aedef155eaba42ab72c1fe480699336c
+result = transaction_one(send_account="0x6C92Dfe1059e66517dFC2126A90C204c95F511ef", receive_account=address_list,
+                         price="186a0")  # 执行多次交易
+logging.info("执行多次交易.{}".format(result))
+account, result = getBalance_of_all_address_list(api_name="chain_getBalance", address=address_list)  # 再次查看余额
+name = u'余额不为零的账号'
+money = u'金额'
+save_excel(account, result, name, money, "执行多次交易后的余额")
+
+	'''

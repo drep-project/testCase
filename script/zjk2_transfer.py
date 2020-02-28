@@ -51,7 +51,9 @@ class Api():
 	
 	# 创建账户
 	def creat_account(self):
-		url = "http://47.75.98.179:15645"
+		# url = "http://47.75.98.179:15645"
+		
+		url = "http://39.98.39.224:35645"
 		
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_createAccount\",\n\t\"params\":[], \n\t\"id\": 3\n\t\n}"
 		headers = {
@@ -76,7 +78,8 @@ class Api():
 		logging.info("发送者: {} --> 接收者: {}".format(rootAccount, recivice))
 		print("发送者: {} --> 接收者: {}".format(rootAccount, recivice))
 		
-		url = "http://47.75.98.179:15645"
+		# url = "http://47.75.98.179:15645"
+		url = "http://39.98.39.224:35645"
 		
 		payload = "{\n\t\"jsonrpc\":\"2.0\",\n\t\"method\":\"account_transfer\",\n\t\"params\":[\"0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c\",\"0xde4541def39ca2393d159f6f407d225dfb653c22\",\"0x16800000000\",\"0x110\",\"0x30000\",\"\"],\n\t\"id\":1\n\t\n}"
 		jsonDic = json.loads(payload)
@@ -215,9 +218,10 @@ if __name__ == '__main__':
 	run = 1
 	height = 0
 	all_count = 0
-	rootAccount = ["0x00162F34533cB204868d619930188d38E49bC625", "0x00336DBd3d7599D23334d4EE12A5668099d1706a",
-	               "0x0035cABcBAb1C81aA7221972dCE56878b631038B", "0x005968592A45cacb08C9421F16db31411Ca38953",
-	               "0x0063bD1df206a7e9A4823FaEd38C4aB14a464C2F", "0x006eAbc443f48050C0725CFB13Fc901e67dA14C1"]
-	recevied = ["0x00833e9D5fbf2D474F1092b68D6DE0b5f7c7468C"]
+	# rootAccount = ["0x00dDEd572F4b40AA36a38FdC9c0aD7A7D483e94B", "0x00CA900E4aaE2123ADBb788222d4974B4db54D47",
+	#                "0x00c4A24F2A38d325bcc43A7b338be2125784d6aC", "0x00bB8Deff193Fec9594Fa65DC3955105534E9654",
+	#                "0x00b30D39C719aEC376e5b2C48bE6Ef17174aF479", "0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c"]
+	rootAccount = ["0xaD3dC2D8aedef155eabA42Ab72C1FE480699336c"]
+
 	timer(60)
 
